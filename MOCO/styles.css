@@ -108,6 +108,12 @@ tbody th { text-align: left; font-weight: 700; }
 tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
 tbody tr.ours { background: #eef5ff; color: #17345f; }
 .result-figure { margin-top: 26px; }
+.image-crop { position: relative; overflow: hidden; width: 100%; background: #fff; }
+.figure-card .image-crop img { position: absolute; top: 0; max-width: none; height: auto; border-radius: 0; }
+.condition-crop { aspect-ratio: 1716 / 320; }
+.figure-card .condition-crop img { right: 0; width: 111.888%; transform: translateY(-23.148%); }
+.qualitative-crop { aspect-ratio: 1837 / 526; }
+.figure-card .qualitative-crop img { left: 0; width: 104.518%; transform: translate(-2.722%, -20.37%); }
 
 .study-section { padding-top: 55px; }
 .preference-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
