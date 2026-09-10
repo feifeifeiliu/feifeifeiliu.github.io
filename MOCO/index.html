@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f7fb" />
+    <meta
+      name="description"
+      content="MOCO generates coherent 3D human motion from concurrent speech, text, and trajectory inputs."
+    />
+    <title>MOCO | Multi-Modal Controlled Coherent Motion Generation</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-nav" aria-label="Primary navigation">
+      <div class="nav-inner">
+        <a class="brand" href="#top" aria-label="MOCO home">MOCO</a>
+        <nav class="nav-links">
+          <a href="#method">Method</a>
+          <a href="#results">Results</a>
+          <a href="#demos">Demos</a>
+          <a href="#bibtex">BibTeX</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero section-shell">
+        <div class="hero-copy">
+          <p class="eyebrow">ECCV 2026 · Project Page</p>
+          <h1>Multi-Modal Controlled Coherent Motion Generation</h1>
+          <p class="authors">
+            <a href="#authors">Yifei Liu</a><sup>1,2</sup><span>·</span>
+            <a href="#authors">Qiong Cao</a><sup>2</sup><span>·</span>
+            <a href="#authors">Hongwei Yi</a><sup>3</sup><span>·</span>
+            <a href="#authors">Huaiguang Jiang</a><sup>1</sup><span>·</span>
+            <a href="#authors">Changxing Ding</a><sup>1</sup>
+          </p>
+          <p class="affiliations" id="authors">
+            <sup>1</sup> South China University of Technology ·
+            <sup>2</sup> Joy Future Academy · <sup>3</sup> Peking University
+          </p>
+          <p class="hero-summary">
+            Coherent 3D human motion from concurrent speech, text, and trajectory inputs.
+          </p>
+          <div class="hero-actions" aria-label="Project links">
+            <a class="button button-primary" href="assets/docs/paper.pdf" target="_blank" rel="noreferrer">Paper</a>
+            <span class="button button-muted" aria-disabled="true" title="Code link to be added">Code</span>
+            <span class="button button-muted" aria-disabled="true" title="arXiv link to be added">arXiv</span>
+          </div>
+        </div>
+        <figure class="hero-figure">
+          <img src="assets/images/teaser.png" alt="MOCO generating a walking motion from speech, text, and a trajectory" />
+          <figcaption>Concurrent text, speech, and trajectory control.</figcaption>
+        </figure>
+      </section>
+
+      <section class="section-shell intro-section" id="abstract">
+        <div class="section-kicker">Abstract</div>
+        <p class="lead">
+          It is natural for us to walk and talk simultaneously. MOCO tackles the challenge of
+          generating 3D avatar motion from concurrent multi-modal inputs, including speech audio,
+          text descriptions, and trajectory data. Instead of requiring aligned multi-modal training
+          data, MOCO decouples the diffusion denoising process by body region. Speech audio guides
+          upper-body gestures and facial details, while text guides lower-body actions. At every
+          denoising step, the modality-specific predictions are assembled into a holistic motion
+          and fed back into the next step, allowing the body parts to coordinate progressively.
+        </p>
+      </section>
+
+      <section class="section-shell media-section" id="demos">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker">Video Presentation</div>
+            <h2>Concurrent control in action</h2>
+          </div>
+          <p class="section-note">Speech-driven gestures remain expressive while the lower body follows text and trajectories.</p>
+        </div>
+        <div class="video-frame video-frame-wide">
+          <video controls playsinline preload="metadata" poster="assets/images/teaser.png">
+            <source src="assets/videos/demo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </section>
+
+      <section class="section-shell" id="method">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker">Method</div>
+            <h2>Spatially decoupled denoising</h2>
+          </div>
+          <p class="section-note">Four denoisers specialize by input modality and motion component.</p>
+        </div>
+        <figure class="figure-card figure-card-large">
+          <img src="assets/images/framework.png" alt="MOCO framework with speech, text, and trajectory denoisers" loading="lazy" />
+          <figcaption>
+            At denoising step <em>t</em>, MOCO predicts modality-specific motion, combines body parts,
+            and diffuses the result for the next iteration.
+          </figcaption>
+        </figure>
+        <div class="method-grid">
+          <article>
+            <span class="method-number">01</span>
+            <h3>Separate the controls</h3>
+            <p>Text-to-motion, speech-to-gesture, trajectory-to-velocity, and speech-to-details denoisers process their relevant signals.</p>
+          </article>
+          <article>
+            <span class="method-number">02</span>
+            <h3>Combine at every step</h3>
+            <p>A body mask assigns lower-body motion to text and upper-body motion to speech, while the current holistic state keeps the parts coordinated.</p>
+          </article>
+          <article>
+            <span class="method-number">03</span>
+            <h3>Extend with planning</h3>
+            <p>An LLM turns complex action descriptions and speech intervals into a motion timeline with timing and body-part assignments.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-shell split-section">
+        <div class="split-copy">
+          <div class="section-kicker">Why the split works</div>
+          <h2>Text and speech activate complementary body regions</h2>
+          <p>
+            Under the task-scoped text conditions, locomotion and posture descriptions concentrate
+            motion in the lower body. BEAT2 speech-gesture sequences concentrate motion in the head
+            and arms. These distributions motivate MOCO’s interpretable spatial decomposition.
+          </p>
+        </div>
+        <figure class="figure-card">
+          <img src="assets/images/body-stats.png" alt="Body-part variance comparison between text-driven and speech-driven motion" loading="lazy" />
+          <figcaption>Generated text-driven motion is 62.0% lower-body dominant; BEAT2 speech motion is 85.1% upper-body dominant.</figcaption>
+        </figure>
+      </section>
+
+      <section class="section-shell split-section trajectory-section">
+        <figure class="figure-card">
+          <img src="assets/images/condition-example.png" alt="Synchronous and asynchronous multi-modal conditions" loading="lazy" />
+          <figcaption>Synchronous and asynchronous condition intervals.</figcaption>
+        </figure>
+        <div class="split-copy">
+          <div class="section-kicker">Trajectory control</div>
+          <h2>Follow a path while speaking naturally</h2>
+          <p>
+            MOCO predicts pelvis velocity from a target trajectory and applies L-BFGS loss guidance
+            during generation. This lets the avatar follow a specified path while speech controls
+            expressive upper-body motion.
+          </p>
+          <div class="mini-video-grid" aria-label="Trajectory control examples">
+            <video controls playsinline preload="none"><source src="assets/videos/trajectory-1.mp4" type="video/mp4" /></video>
+            <video controls playsinline preload="none"><source src="assets/videos/trajectory-2.mp4" type="video/mp4" /></video>
+            <video controls playsinline preload="none"><source src="assets/videos/trajectory-3.mp4" type="video/mp4" /></video>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell benchmark-section">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker">Benchmark</div>
+            <h2>1,000 clips for concurrent multi-modal control</h2>
+          </div>
+          <p class="section-note">40 lower-body text descriptions · 694 speech clips · 8 speakers</p>
+        </div>
+        <div class="benchmark-strip">
+          <div><strong>1,000</strong><span>test clips</span></div>
+          <div><strong>40</strong><span>text descriptions</span></div>
+          <div><strong>694</strong><span>audio clips</span></div>
+          <div><strong>2 + 2</strong><span>text + audio per clip</span></div>
+        </div>
+        <p class="benchmark-copy">
+          Each clip combines two text descriptions with two neighboring speech segments. The
+          benchmark is designed to test compositional consistency under concurrent conditions,
+          rather than broad open-ended semantic coverage.
+        </p>
+      </section>
+
+      <section class="section-shell" id="results">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker">Quantitative results</div>
+            <h2>MOCO preserves both control signals</h2>
+          </div>
+          <p class="section-note">Best values are bolded within each metric direction.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <caption>Comparison on the concurrent multi-modal benchmark</caption>
+            <thead>
+              <tr>
+                <th rowspan="2">Method</th>
+                <th colspan="4">Text2Motion</th>
+                <th colspan="3">Speech2Gesture</th>
+              </tr>
+              <tr>
+                <th>FID+ ↓</th><th>R1 ↑</th><th>M2T ↑</th><th>M2M ↑</th>
+                <th>FID-A ↓</th><th>BC ↑</th><th>L1div ↑</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th>Weighted Sum</th><td>1.335</td><td>6.8</td><td>0.546</td><td>0.537</td><td><strong>2.17</strong></td><td>2.20</td><td>4.08</td></tr>
+              <tr><th>Pseudo-Text</th><td>1.593</td><td>2.2</td><td>0.511</td><td>0.503</td><td>2.22</td><td>2.55</td><td>6.43</td></tr>
+              <tr><th>SynTalker</th><td>0.985</td><td>9.8</td><td>0.601</td><td>0.603</td><td>6.60</td><td><strong>2.95</strong></td><td><strong>9.12</strong></td></tr>
+              <tr class="ours"><th>MOCO (Ours)</th><td><strong>0.862</strong></td><td><strong>24.6</strong></td><td><strong>0.649</strong></td><td><strong>0.639</strong></td><td>3.83</td><td>2.72</td><td>8.62</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figure class="figure-card figure-card-large result-figure">
+          <img src="assets/images/qualitative.png" alt="Qualitative samples generated by MOCO" loading="lazy" />
+          <figcaption>MOCO coordinates speech gestures with jogging, walking, turning, and sitting motions.</figcaption>
+        </figure>
+      </section>
+
+      <section class="section-shell study-section">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker">User study</div>
+            <h2>Viewers prefer coherent, synchronized motion</h2>
+          </div>
+          <p class="section-note">10 participants · 60 pairwise comparisons</p>
+        </div>
+        <div class="preference-grid">
+          <div><strong>99.0%</strong><span>better text following<br />vs. Pseudo-Text</span></div>
+          <div><strong>83.0%</strong><span>better beat synchronization<br />vs. Weighted Sum</span></div>
+          <div><strong>71.0%</strong><span>better body coherence<br />vs. Combine Once</span></div>
+          <div><strong>44.8%</strong><span>better temporal fluidity<br />vs. Combine Once</span></div>
+        </div>
+      </section>
+
+      <section class="section-shell gallery-section">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker">Additional results</div>
+            <h2>Planning, flexibility, and fine details</h2>
+          </div>
+          <a class="text-link" href="assets/docs/supplementary.pdf" target="_blank" rel="noreferrer">Supplementary Material ↗</a>
+        </div>
+        <div class="video-gallery">
+          <article class="gallery-item gallery-item-wide">
+            <div class="video-frame"><video controls playsinline preload="none"><source src="assets/videos/motion-planning.mp4" type="video/mp4" /></video></div>
+            <h3>LLM motion planning</h3>
+            <p>Complex descriptions become a timed sequence of elementary motions.</p>
+          </article>
+          <article class="gallery-item gallery-item-wide">
+            <div class="video-frame"><video controls playsinline preload="none"><source src="assets/videos/flexibility.mp4" type="video/mp4" /></video></div>
+            <h3>Configurable body-part control</h3>
+            <p>Timeline rules can give a text command temporary control of the arms.</p>
+          </article>
+          <article class="gallery-item gallery-item-wide">
+            <div class="video-frame"><video controls playsinline preload="none"><source src="assets/videos/generalization.mp4" type="video/mp4" /></video></div>
+            <h3>Generalization to unseen audio</h3>
+            <p>Additional speech examples from an unseen dataset.</p>
+          </article>
+        </div>
+        <div class="facial-row" aria-label="Facial detail examples">
+          <div class="facial-label">Facial details</div>
+          <video controls playsinline preload="none"><source src="assets/videos/facial-video_1.mp4" type="video/mp4" /></video>
+          <video controls playsinline preload="none"><source src="assets/videos/facial-video_2.mp4" type="video/mp4" /></video>
+          <video controls playsinline preload="none"><source src="assets/videos/facial-video_3.mp4" type="video/mp4" /></video>
+          <video controls playsinline preload="none"><source src="assets/videos/facial-video_4.mp4" type="video/mp4" /></video>
+          <video controls playsinline preload="none"><source src="assets/videos/facial-video_5.mp4" type="video/mp4" /></video>
+          <video controls playsinline preload="none"><source src="assets/videos/facial-video_6.mp4" type="video/mp4" /></video>
+        </div>
+      </section>
+
+      <section class="section-shell limitations-section">
+        <div class="section-kicker">Limitations</div>
+        <h2>Interpretable control with a fixed default assignment</h2>
+        <p>
+          MOCO’s default body-part assignment can be suboptimal when text and speech request
+          overlapping upper-body actions. The timeline interface provides a practical override, while
+          adaptive body-part assignment remains an important direction for future work. The benchmark
+          focuses on controlled compositional consistency and does not claim arbitrary text-audio
+          generalization.
+        </p>
+      </section>
+
+      <section class="section-shell ack-section">
+        <div class="section-kicker">Acknowledgement</div>
+        <p>
+          This work was supported by the National Natural Science Foundation of China under Grants
+          62476099 and 62076101, Guangdong Basic and Applied Basic Research Foundation under Grants
+          2024B1515020082 and 2023A1515010007, and the TCL Young Scholars Program.
+        </p>
+      </section>
+
+      <section class="section-shell bibtex-section" id="bibtex">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker">BibTeX</div>
+            <h2>Citation</h2>
+          </div>
+          <button class="copy-button" type="button" data-copy-target="bibtex-code">Copy BibTeX</button>
+        </div>
+        <pre id="bibtex-code"><code>@inproceedings{liu2026moco,
+  title     = {Multi-Modal Controlled Coherent Motion Generation},
+  author    = {Liu, Yifei and Cao, Qiong and Yi, Hongwei and Jiang, Huaiguang and Ding, Changxing},
+  booktitle = {European Conference on Computer Vision (ECCV)},
+  year      = {2026}
+}</code></pre>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>MOCO · Multi-Modal Controlled Coherent Motion Generation</p>
+      <p>Page structure adapted from the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noreferrer">Academic Project Page Template</a>, inspired by <a href="https://nerfies.github.io/" target="_blank" rel="noreferrer">Nerfies</a>.</p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
